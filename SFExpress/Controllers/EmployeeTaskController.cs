@@ -20,9 +20,43 @@ namespace SFExpress.Controllers
             return _provider.GetEmployeeTasks(_adapter);
         }
 
-        public Employee Get(string fullName)
+        public IHttpActionResult Post(EmployeeTask employeeTask)
         {
-            throw new NotImplementedException();
+            var success = _adapter.CreateEmployeeTask(employeeTask);
+            if (success)
+            {
+                return Ok();
+            }
+            else
+            {
+                return InternalServerError();
+            }
+        }
+
+        public IHttpActionResult Put(EmployeeTask employeeTask)
+        {
+            var success = _adapter.UpdateEmployeeTask(employeeTask);
+            if (success)
+            {
+                return Ok();
+            }
+            else
+            {
+                return InternalServerError();
+            }
+        }
+
+        public IHttpActionResult Delete(int id)
+        {
+            var success = _adapter.DeleteEmployeeTask(id);
+            if (success)
+            {
+                return Ok();
+            }
+            else
+            {
+                return InternalServerError();
+            }
         }
     }
 }

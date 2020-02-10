@@ -17,14 +17,38 @@ namespace SFExpress.Logics
             }
         }
 
-        public bool SaveEmployee(Employee employee)
+        public bool CreateEmployee(Employee employee)
         {
             using (var entities = new SFExpressEntities())
             {
                 try
                 {
-                    entities.Employee.AddOrUpdate(employee);
+                    entities.Employee.Add(employee);
+                    entities.SaveChanges();
                     return true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    return false;
+                }
+            }
+        }
+
+        public bool UpdateEmployee(Employee employee)
+        {
+            using (var entities = new SFExpressEntities())
+            {
+                try
+                {
+                    var toUpdate = entities.Employee.SingleOrDefault(x => x.EmployeeID == employee.EmployeeID);
+                    if (toUpdate != null)
+                    {
+                        entities.Employee.AddOrUpdate(employee);
+                        entities.SaveChanges();
+                        return true;
+                    }
+                    else return false;
                 }
                 catch (Exception ex)
                 {

@@ -20,14 +20,22 @@ namespace SFExpress.Controllers
             return _provider.GetEmployees(_employeeAdapter).Select(x => new EmployeeViewModel(x, _employeeTaskAdapter)).ToList();
         }
 
-        //public List<EmployeeViewModel> GetEmployeeViewModel()
-        //{
-        //    return _provider.GetEmployees(_employeeAdapter).Select(x => new EmployeeViewModel(x, _employeeTaskAdapter)).ToList();
-        //}
-
         public IHttpActionResult Post(Employee employee)
         {
-            var success = _employeeAdapter.SaveEmployee(employee);
+            var success = _employeeAdapter.CreateEmployee(employee);
+            if (success)
+            {
+                return Ok();
+            }
+            else
+            {
+                return InternalServerError();
+            }
+        }
+
+        public IHttpActionResult Put(Employee employee)
+        {
+            var success = _employeeAdapter.UpdateEmployee(employee);
             if (success)
             {
                 return Ok();

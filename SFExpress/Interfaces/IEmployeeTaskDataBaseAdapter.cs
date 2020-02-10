@@ -11,7 +11,8 @@ namespace SFExpress.Interfaces
     {
         List<EmployeeTask> GetEmployeeTasks();
         List<EmployeeTask> GetEmployeeTasks(Employee employee);
-        bool SaveEmployeeTask(EmployeeTask employeeTask);
-        bool DeleteEmployeeTask(EmployeeTask employeeTask);
+        bool CreateEmployeeTask(EmployeeTask employeeTask);
+        bool UpdateEmployeeTask(EmployeeTask employeeTask);
+        bool DeleteEmployeeTask(int id);
     }
 }

@@ -20,20 +20,26 @@ namespace SFExpress.Logics
 
         public List<EmployeeTask> GetEmployeeTasks(Employee employee)
         {
-            using (var entities = new SFExpressEntities())
+            List<EmployeeTask> tasks = new List<EmployeeTask>();
+            if (employee.EmployeeTasks != null && !string.IsNullOrEmpty(employee.EmployeeTasks))
             {
-                HashSet<int> taskIDs = new HashSet<int>(JsonConvert.DeserializeObject<List<int>>(employee.EmployeeTasks));
-                return entities.EmployeeTask.Where(x => taskIDs.Contains(x.EmployeeTaskID)).ToList();
+                using (var entities = new SFExpressEntities())
+                {
+                    HashSet<int> taskIDs = new HashSet<int>(JsonConvert.DeserializeObject<List<int>>(employee.EmployeeTasks));
+                    tasks =  entities.EmployeeTask.Where(x => taskIDs.Contains(x.EmployeeTaskID)).ToList();
+                }
             }
+            return tasks;
         }
 
-        public bool SaveEmployeeTask(EmployeeTask employeeTask)
+        public bool CreateEmployeeTask(EmployeeTask employeeTask)
         {
             using (var entities = new SFExpressEntities())
             {
                 try
                 {
-                    entities.EmployeeTask.AddOrUpdate(employeeTask);
+                    entities.EmployeeTask.Add(employeeTask);
+                    entities.SaveChanges();
                     return true;
                 }
                 catch (Exception ex)
@@ -44,13 +50,39 @@ namespace SFExpress.Logics
             }
         }
 
-        public bool DeleteEmployeeTask(EmployeeTask employeeTask)
+        public bool UpdateEmployeeTask(EmployeeTask employeeTask)
         {
             using (var entities = new SFExpressEntities())
             {
                 try
                 {
-                    entities.EmployeeTask.Remove(employeeTask);
+                    var toUpdate = entities.EmployeeTask.SingleOrDefault(x => x.EmployeeTaskID == employeeTask.EmployeeTaskID);
+                    if (toUpdate != null)
+                    {
+                        entities.EmployeeTask.AddOrUpdate(employeeTask);
+                        entities.SaveChanges();
+                        return true;
+                    }
+                    else return false;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    return false;
+                }
+            }
+        }
+
+        public bool DeleteEmployeeTask(int id)
+        {
+            using (var entities = new SFExpressEntities())
+            {
+                try
+                {
+                    EmployeeTask toDelete = new EmployeeTask { EmployeeTaskID = id };
+                    entities.EmployeeTask.Attach(toDelete);
+                    entities.EmployeeTask.Remove(toDelete);
+                    entities.SaveChanges();
                     return true;
                 }
                 catch (Exception ex)
