@@ -1,0 +1,31 @@
+﻿<div id="body">
+    <table border="1">
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Hired Since</th>
+            <th>Assigned Tasks</th>
+        </tr>
+        <tbody id="Employees"></tbody>
+</table>
+    
+</div>
+@section scripts{
+    <script type="text/javascript">
+$(function()
+{
+        $.getJSON('/api/employee', function(employeeJsonPayload)
+        {
+            $(employeeJsonPayload).each(function(i, item)
+            {
+                $('#Employees').append('<tr>');
+                $('#Employees').append('<th>' + item.FirstName + '</th>');
+                $('#Employees').append('<th>' + item.LastName + '</th>');
+                $('#Employees').append('<th>' + item.HiredDate + '</th>');
+                $('#Employees').append('<th>' + item.EmployeeTasks + '</th>');
+                $('#Employees').append('<tr>');
+            });
+        });
+});
+    </script>
+}
